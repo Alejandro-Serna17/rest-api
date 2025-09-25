@@ -1,0 +1,34 @@
+name: Run Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout student repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run public tests
+        run: npm test
+
+      - name: Fetch hidden tests from private repo
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          git clone https://github.com/njit-prof-bill/microservice-hidden-tests hidden-tests
+          cp hidden-tests/tests/hidden.test.js ./tests/
+
+      - name: Run hidden tests
+        run: npm test tests/hidden.test.js

@@ -1,0 +1,29 @@
+{
+    "tests": [
+        {
+            "name": "PR Submission and Merge",
+            "command": "npm test -- -t 'PR was successfully created and merged'",
+            "points": 1
+        },
+        {
+            "name": "POST /users - Create a new user",
+            "command": "npm test -- -t 'POST /users should create a new user'",
+            "points": 1
+        },
+        {
+            "name": "GET /users/:id - Retrieve user details",
+            "command": "npm test -- -t 'GET /users/:id should return user details'",
+            "points": 1
+        },
+        {
+            "name": "PUT /users/:id - Update user details",
+            "command": "npm test -- -t 'PUT /users/:id should update user details'",
+            "points": 1
+        },
+        {
+            "name": "DELETE /users/:id - Delete a user",
+            "command": "npm test -- -t 'DELETE /users/:id should delete the user'",
+            "points": 1
+        }
+    ]
+}

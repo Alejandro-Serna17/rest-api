@@ -1,0 +1,72 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Install dependencies
+      run: npm install  # Ensure Jest and all other dependencies are installed    
+    - name: PR Submission and Merge
+      id: pr-submission-and-merge
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: PR Submission and Merge
+        setup-command: ''
+        command: npm test -- -t 'PR was successfully created and merged'
+        timeout: 10
+        max-score: 1
+    - name: POST /users - Create a new user
+      id: post-users-create-a-new-user
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: POST /users - Create a new user
+        setup-command: ''
+        command: npm test -- -t 'POST /users should create a new user'
+        timeout: 10
+        max-score: 1
+    - name: GET /users/:id - Retrieve user details
+      id: get-users-id-retrieve-user-details
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: GET /users/:id - Retrieve user details
+        setup-command: ''
+        command: npm test -- -t 'GET /users/:id should return user details'
+        timeout: 10
+        max-score: 1
+    - name: PUT /users/:id - Update user details
+      id: put-users-id-update-user-details
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: PUT /users/:id - Update user details
+        setup-command: ''
+        command: npm test -- -t 'PUT /users/:id should update user details'
+        timeout: 10
+        max-score: 1
+    - name: DELETE /users/:id - Delete a user
+      id: delete-users-id-delete-a-user
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: DELETE /users/:id - Delete a user
+        setup-command: ''
+        command: npm test -- -t 'DELETE /users/:id should delete the user'
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        PR-SUBMISSION-AND-MERGE_RESULTS: "${{steps.pr-submission-and-merge.outputs.result}}"
+        POST-USERS-CREATE-A-NEW-USER_RESULTS: "${{steps.post-users-create-a-new-user.outputs.result}}"
+        GET-USERS-ID-RETRIEVE-USER-DETAILS_RESULTS: "${{steps.get-users-id-retrieve-user-details.outputs.result}}"
+        PUT-USERS-ID-UPDATE-USER-DETAILS_RESULTS: "${{steps.put-users-id-update-user-details.outputs.result}}"
+        DELETE-USERS-ID-DELETE-A-USER_RESULTS: "${{steps.delete-users-id-delete-a-user.outputs.result}}"
+      with:
+        runners: pr-submission-and-merge,post-users-create-a-new-user,get-users-id-retrieve-user-details,put-users-id-update-user-details,delete-users-id-delete-a-user
